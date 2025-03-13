@@ -53,4 +53,12 @@ def delete_note(note_id: int, db: Session = Depends(get_db)):
     if not crud.delete_note(db, note_id):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Note not found.")
-    return Response(content={"Note deleted successfully"}, status_code=status.HTTP_204_NO_CONTENT)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.get("/notes/{note_id}/history", response_model=list[schemas.NoteVersionResponse], tags=["history"])
+def get_note_history(note_id: int, db: Session = Depends(get_db)):
+    history = db.query(crud.NoteVersion).filter(crud.NoteVersion.note_id == note_id).all()
+    if not history:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Note history not found.")
+    return history

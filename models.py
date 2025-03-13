@@ -15,8 +15,12 @@ class Note(Base):
         "NoteVersion",
         back_populates="note",
         cascade="all, delete",
-        order_by="desc(NoteVersion.created_at)"
+        passive_deletes=True,
+        order_by="NoteVersion.created_at.desc()"
     )
+
+    def __repr__(self):
+        return f"Note(id={self.id} title={self.title})"
 
 
 class NoteVersion(Base):
@@ -31,3 +35,6 @@ class NoteVersion(Base):
         "Note",
         back_populates="versions"
     )
+
+    def __repr__(self):
+        return f"NoteVersion(id={self.id} note_id={self.note_id})"
