@@ -1,7 +1,8 @@
 import logging
 from typing import Optional
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.future import select
 from models import Note, NoteVersion
 from schemas import NoteCreate, NoteUpdate
 
@@ -10,37 +11,38 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def commit_handler(db: Session, message: str | None):
+async def commit_handler(db: AsyncSession, message: str | None):
     try:
-        db.commit()
+        await db.commit()
         if message:
             logger.info(message)
     except SQLAlchemyError as e:
-        db.rollback()
+        await db.rollback()
         logger.error(f"Database error: {e}")
         raise
 
 
-def create_note(db: Session, note_data: NoteCreate) -> Optional[Note]:
+async def create_note(db: AsyncSession, note_data: NoteCreate) -> Optional[Note]:
     new_note = Note(**note_data.model_dump())
     db.add(new_note)
-    commit_handler(db, None)
+    await commit_handler(db, None)
     logger.info(f"New note created: {new_note}")
-    db.refresh(new_note)
+    await db.refresh(new_note)
 
     return new_note
 
 
-def get_note(db: Session, note_id: int) -> Optional[Note]:
-    return db.get(Note, note_id)
+async def get_note(db: AsyncSession, note_id: int) -> Optional[Note]:
+    return await db.get(Note, note_id)
 
 
-def get_notes(db: Session) -> list[Note]:
-    return db.query(Note).all()
+async def get_notes(db: AsyncSession) -> list[Note]:
+    result = await db.execute(select(Note))
+    return result.scalars().all()
 
 
-def update_note(db: Session, note_id: int, note_data: NoteUpdate) -> Optional[Note]:
-    note = db.get(Note, note_id)
+async def update_note(db: AsyncSession, note_id: int, note_data: NoteUpdate) -> Optional[Note]:
+    note = await db.get(Note, note_id)
     if not note:
         return None
 
@@ -54,12 +56,12 @@ def update_note(db: Session, note_id: int, note_data: NoteUpdate) -> Optional[No
     for key, value in updated_note.items():
         setattr(note, key, value)
 
-    commit_handler(db, f"Note updated with ID: {note.id}")
-    db.refresh(note)
+    await commit_handler(db, f"Note updated with ID: {note.id}")
+    await db.refresh(note)
     return note
 
 
-def delete_note(db: Session, note_id: int) -> Optional[Note]:
+async def delete_note(db: AsyncSession, note_id: int) -> Optional[Note]:
     note = db.get(Note, note_id)
     if not note:
         return None
@@ -69,5 +71,5 @@ def delete_note(db: Session, note_id: int) -> Optional[Note]:
     commit_handler(db, f"Note history with ID: {note.id} saved")
 
     db.delete(note)
-    commit_handler(db, f"Note deleted with ID: {note.id}")
+    await commit_handler(db, f"Note deleted with ID: {note.id}")
     return note

@@ -16,7 +16,8 @@ class Note(Base):
         back_populates="note",
         cascade="all, delete",
         passive_deletes=True,
-        order_by="NoteVersion.created_at.desc()"
+        order_by="NoteVersion.created_at.desc()",
+        lazy = "selectin"
     )
 
     def __repr__(self):
