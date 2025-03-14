@@ -62,14 +62,10 @@ async def update_note(db: AsyncSession, note_id: int, note_data: NoteUpdate) -> 
 
 
 async def delete_note(db: AsyncSession, note_id: int) -> Optional[Note]:
-    note = db.get(Note, note_id)
+    note = await db.get(Note, note_id)
     if not note:
         return None
 
-    history_entry = NoteVersion(note_id=note.id, content=note.content)
-    db.add(history_entry)
-    commit_handler(db, f"Note history with ID: {note.id} saved")
-
-    db.delete(note)
+    await db.delete(note)
     await commit_handler(db, f"Note deleted with ID: {note.id}")
     return note
