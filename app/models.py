@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 
 class Note(Base):
@@ -16,7 +16,8 @@ class Note(Base):
         back_populates="note",
         cascade="all, delete",
         passive_deletes=True,
-        order_by="NoteVersion.created_at.desc()"
+        order_by="NoteVersion.created_at.desc()",
+        lazy = "selectin"
     )
 
     def __repr__(self):
