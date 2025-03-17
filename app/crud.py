@@ -3,8 +3,8 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
-from models import Note, NoteVersion
-from schemas import NoteCreate, NoteUpdate
+from app.models import Note, NoteVersion
+from app.schemas import NoteCreate, NoteUpdate
 
 
 logging.basicConfig(level=logging.INFO)

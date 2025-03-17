@@ -6,8 +6,7 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 
-from database import Base
-from models import Note, NoteVersion
+from app.database import Base
 
 config = context.config
 

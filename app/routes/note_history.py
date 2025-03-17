@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import crud, schemas
-from database import get_db
+from app import crud, schemas
+from app.database import get_db
 
 
 router = APIRouter(prefix="/history", tags=["Note History"])

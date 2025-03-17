@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
 from cachetools import TTLCache
-from models import Note
+from app.models import Note
 
 
 nltk.download("punkt")

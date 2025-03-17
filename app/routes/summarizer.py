@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
-from models import Note
-from services.gemini_summerizer import summarize_text
+from app.database import get_db
+from app.models import Note
+from app.services.gemini_summerizer import summarize_text
 
 
 router = APIRouter(prefix="/summarizer", tags=["AI Summarizer"])

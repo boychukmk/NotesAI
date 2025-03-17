@@ -2,7 +2,7 @@ import requests
 import logging
 from dataclasses import dataclass
 from typing import List, Optional, Dict
-from config import GENAI_API_KEY
+from app.config import GENAI_API_KEY
 
 
 logger = logging.getLogger(__name__)

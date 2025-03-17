@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
-from services.analytics import NoteAnalytics
+from app.database import get_db
+from app.services.analytics import NoteAnalytics
 
 
 router = APIRouter(prefix="/analytics", tags=["Notes Analytics"])

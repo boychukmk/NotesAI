@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from database import init_db
-from routes.notes import router as notes_router
-from routes.note_history import router as note_history_router
-from routes.summarizer import router as summarizer_router
-from routes.analytics import router as analytics_router
+from app.database import init_db
+from app.routes.notes import router as notes_router
+from app.routes.note_history import router as note_history_router
+from app.routes.summarizer import router as summarizer_router
+from app.routes.analytics import router as analytics_router
 
 
 @asynccontextmanager
