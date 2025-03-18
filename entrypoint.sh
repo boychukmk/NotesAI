@@ -8,6 +8,13 @@ until pg_isready -h db -p 5432 -U user; do
 done
 echo "Postgres is accessible !"
 
+if [[ "$1" == "test" ]]; then
+    echo "Running tests with coverage..."
+    coverage run -m pytest --asyncio-mode=auto
+    coverage report
+    exit 0
+fi
+
 echo "Applying migrations Alembic..."
 alembic upgrade head
 

@@ -4,7 +4,7 @@ from typing import List, Optional
 
 
 class NoteBase(BaseModel):
-    title: str
+    title: constr(min_length=3, max_length=50)
     content: constr(min_length=1, max_length=10000)
 
 
@@ -13,8 +13,8 @@ class NoteCreate(NoteBase):
 
 
 class NoteUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
+    title: Optional[constr(min_length=3, max_length=50)] = None
+    content: Optional[constr(min_length=1, max_length=10000)] = None
 
 
 class NoteVersionResponse(BaseModel):

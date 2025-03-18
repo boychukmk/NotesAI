@@ -9,9 +9,6 @@ router = APIRouter(prefix="/notes", tags=["Notes CRUD"])
 @router.post("/", response_model=schemas.NoteResponse,
          status_code=status.HTTP_201_CREATED)
 async def create_note(note_data: schemas.NoteCreate, db: AsyncSession = Depends(get_db)):
-    if len(note_data.title) < 3:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Title must be at least 3 characters long.")
     return await crud.create_note(db, note_data)
 
 
