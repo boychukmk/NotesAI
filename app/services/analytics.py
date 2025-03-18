@@ -9,10 +9,6 @@ from cachetools import TTLCache
 from app.models import Note
 
 
-nltk.download("punkt")
-nltk.download("punkt_tab")
-
-
 class NoteAnalytics:
     def __init__(self, db: AsyncSession):
         self.db = db
