@@ -2,23 +2,24 @@ version: "3.8"
 
 services:
   app:
-    build: .
-    container_name: note_analytics_app
+    build: ./backend
+    container_name: notes_app
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql+asyncpg://user:password@db:5432/notes_db"
+      DATABASE_URL: ${DATABASE_URL}
+      GENAI_API_KEY: ${GENAI_API_KEY}
     volumes:
-      - .:/app
+      - ./backend:/app
     restart: unless-stopped
     entrypoint: ["/app/entrypoint.sh"]
 
   db:
     image: postgres:15
-    container_name: note_analytics_db
+    container_name: notes_db
     restart: always
     environment:
       POSTGRES_DB: notes_db
@@ -34,6 +35,13 @@ services:
       retries: 5
       start_period: 5s
       timeout: 5s
+
+  frontend:
+    build: ./frontend
+    container_name: notes_frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
 
 volumes:
   pg_data:

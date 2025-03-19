@@ -16,7 +16,7 @@ if [[ "$1" == "test" ]]; then
 fi
 
 echo "Applying migrations Alembic..."
-alembic upgrade head
+alembic -c /backend/app/alembic.ini upgrade head
 
 echo "Starting app..."
 exec uvicorn app.main:app --host 0.0.0.0 --port 8000
