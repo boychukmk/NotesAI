@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
 from app.database import init_db
 from app.routes.notes import router as notes_router
 from app.routes.note_history import router as note_history_router
@@ -15,6 +17,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Notes Manager System")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(notes_router)
 app.include_router(note_history_router)
