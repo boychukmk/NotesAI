@@ -95,6 +95,7 @@ docker compose up --build
 ### 4. After building containers you can access app:
 
 - **Frontend**: Visit http://localhost:8080 in your browser.
+  In the catalog of notes you can access Note Page clicking on "Read More". There will be buttons to check note history and summarize selected note.
 - **Backend**: The backend API will be running on http://localhost:8000 with http://localhost:8000/docs Swagger UI.
 - **Tests** will be available while building in terminal, or you can run command 
 ```bash
