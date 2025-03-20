@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /backend/app
+WORKDIR /backend
 
 COPY requirements.txt .
 
@@ -15,13 +15,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 RUN python -c "import nltk; nltk.download('punkt')"
 
-COPY alembic.ini /backend/app/alembic.ini
-COPY alembic /backend/app/alembic
-COPY . /backend/app/
+COPY . /backend
 
-COPY entrypoint.sh /backend/app/
-RUN chmod +x /backend/app/entrypoint.sh
+RUN chmod +x /backend/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["/backend/entrypoint.sh"]

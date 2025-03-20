@@ -12,10 +12,11 @@ services:
     environment:
       DATABASE_URL: "postgresql+asyncpg://user:password@db:5432/notes_db"
       GENAI_API_KEY: ${GENAI_API_KEY}
+      PYTHONUNBUFFERED: 1
     volumes:
-      - ./backend:/app
+      - ./backend:/backend
     restart: unless-stopped
-    entrypoint: ["/app/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "/backend/entrypoint.sh"]
 
   db:
     image: postgres:15
@@ -30,7 +31,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d notes_db"]
+      test: ["CMD-SHELL", "pg_isready -U user -d notes_db -q"]
       interval: 10s
       retries: 5
       start_period: 5s
@@ -42,6 +43,19 @@ services:
     ports:
       - "8080:80"
     restart: unless-stopped
+
+  tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    container_name: notes_tests
+    environment:
+      TEST_DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+      GENAI_API_KEY: ${GENAI_API_KEY}
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./backend:/backend
+    command: ["/bin/sh", "-c", "coverage run -m pytest --asyncio-mode=auto && coverage report"]
 
 volumes:
   pg_data:
