@@ -71,6 +71,8 @@ cd NotesAI
 ### 2. Create the .env file
 
 Create a .env file in the root of the project with the following content:
+You can get key here (https://aistudio.google.com/).
+
 
 MacOS
 ```bash
